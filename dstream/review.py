@@ -1,6 +1,9 @@
 from IPython.display import display
 import pandas as pd 
 
+def read_data(filename):
+    return pd.read_csv(filename)
+    
 def analyze(data, sections=None):
     available_sections = {
         "head": lambda: data.head(),
@@ -27,8 +30,7 @@ def get_columns(data):
     return {"object": object_cols, "numeric": numeric_cols}
 
 
-C
-
+ 
 def std():
     """ A high standard deviation means that the data is spread out, while a low standard
     deviation means that the data is concentrated around the mean"""
