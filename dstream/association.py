@@ -1,6 +1,7 @@
 import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
+from scipy.stats import chi2_contingency
 
 def analyze_relationships(data, features, matrix_type='corr', plot_heatmap=False, save_path=None):
     """
@@ -49,3 +50,52 @@ def analyze_relationships(data, features, matrix_type='corr', plot_heatmap=False
         plt.show()
 
     return matrix
+
+
+
+
+ 
+ 
+ 
+
+def chi_square_test(data, features, plot_expected=False, save_path=None):
+    """
+    Performs a Chi-Square test of independence on selected categorical/numerical features.
+    If the chi-squared value is higher, it suggests a stronger likelihood of a significant connection between the variables.
+    If the chi-squared value is higher than the critical value, we will discard the assumption of no relationship.
+    A higher chi-square value signifies a greater disparity between observed and expected frequencies.
+    Given that the p-value is less than 0.05, we can reject the null hypothesis and conclude that there is indeed a significant association between them.
+    
+    dof: The degrees of freedom, indicating the number of independent categories in the data
+    Parameters:
+        data (pd.DataFrame): The dataset.
+        features (list): List of column names to include in the contingency table.
+        
+
+    Returns:
+        dict: A dictionary containing chi2, p-value, degrees of freedom, and expected frequencies.
+    """
+    # Extract relevant columns
+    contingency_data = data[features].iloc[:, :len(features)]
+
+    # Perform Chi-Square test
+    chi2, p, dof, expected = chi2_contingency(contingency_data)
+
+    # print("\nChi-Square Test Results:")
+    # print(f"Chi2 Statistic: {chi2:.4f}")
+    # print(f"Degrees of Freedom: {dof}")
+    # print(f"P-value: {p:.6f}")
+
+    # Convert expected frequencies to a DataFrame for better readability
+    expected_df = pd.DataFrame(
+        expected, 
+        index=contingency_data.index if contingency_data.index.size == expected.shape[0] else range(expected.shape[0]),
+        columns=contingency_data.columns
+    )
+
+    #print("\nExpected Frequencies:")
+    #display(expected_df)
+
+    
+
+    return {"chi2": chi2, "p_value": p, "dof": dof, "expected": expected_df}
