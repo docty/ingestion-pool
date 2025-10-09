@@ -7,7 +7,7 @@ def plot_chart(
     x=None,
     y=None,
     data=None,
-    chart_type='line',
+    chart_type='hist',
     xlabel='x',
     ylabel='y',
     title=None,
