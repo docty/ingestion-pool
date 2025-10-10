@@ -64,7 +64,7 @@ def plot_chart(
         sns.histplot(y, bins=bins, edgecolor='black', kde=True, alpha=0.75, ax=ax)
         ax.set_xlabel(xlabel)
         ax.set_ylabel(ylabel)
-        ax.set_title(f'{title}, Skewness: {skewness}, Kurtosis: '{kurto})
+        ax.set_title(f'{title}, Skew: {skewness:.5f}, Kurtosis: {kurto:.5f}')
         ax.grid(axis='y', linestyle='--', alpha=0.6)
 
    
