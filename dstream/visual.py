@@ -2,6 +2,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 import pandas as pd
+from scipy.stats import skew, kurtosis
+ 
 
 def plot_chart(
     x=None,
@@ -56,10 +58,13 @@ def plot_chart(
     elif chart_type == 'hist':
         if y is None:
             raise ValueError("Histogram requires y data.")
-        ax.hist(y, bins=bins, edgecolor='black', alpha=0.75)
+        skewness = skew(y)
+        kurto = kurtosis(y)
+
+        sns.histplot(y, bins=bins, edgecolor='black', kde=True, alpha=0.75, ax=ax)
         ax.set_xlabel(xlabel)
         ax.set_ylabel(ylabel)
-        ax.set_title(title)
+        ax.set_title(f'{title}, Skewness: {skewness}, Kurtosis: '{kurto})
         ax.grid(axis='y', linestyle='--', alpha=0.6)
 
    
