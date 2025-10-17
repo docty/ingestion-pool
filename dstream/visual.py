@@ -137,6 +137,12 @@ def histogram_plot(df, numerical_columns):
     g = g.map(sns.distplot, 'value')
     return g
 
+def correlate(data): 
+    correlation_matrix = data.corr()
+    sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm')
+    plt.title("Correlation Matrix")
+    plt.show()
+
 
 def heatmap_plot(df, dependent_variable):
     '''
@@ -208,3 +214,18 @@ def pairplot(data):
     sns.set_style('darkgrid')
     sns.pairplot(data, kind='reg', diag_kind='kde',
              plot_kws={'line_kws':{'color':'red'}}, diag_kws={'color':'green'})
+
+def lmplot(data, x, y, hue="classification"):
+    sns.lmplot(data=df,x="pH",y="Conductivity (µS/cm)",hue=hue)
+    plt.title(f"Relation between {x} and the {y}")
+    plt.show()
+
+def jointplot(data, x, y, hue="classification"):
+    g = sns.jointplot(data=data,x=x,y=y,hue=hue,height=8)
+    g.plot_joint(sns.kdeplot,color='y',zorder=0)
+    g.plot_marginals(sns.rugplot,color='r',height=-0.2,clip_on=False)
+    plt.show()
+
+def regplot(data, x, y):
+    sns.regplot(data=data, y=y, x=x)
+    plt.show()
