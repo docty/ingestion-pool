@@ -8,6 +8,7 @@ def read_data(filename):
     
 def analyze(data, sections=None):
     available_sections = {
+        "shape": lambda: data.shape,
         "head": lambda: data.head(),
         "tail": lambda: data.tail(),
         "info": lambda: data.info(),
@@ -50,3 +51,18 @@ def checks_null_values(df):
         return missing_data
     else: 
         print('No NaN found.')
+
+
+def first_look(data):
+    print("################## DataFrame Null Values ###########")
+    print("\n")
+    d_is=data.isnull().values.any()
+    display(d_is)
+    print("################## DataFrame Null Values Sum ###########")
+    print("\n")
+    d_isn=data.isnull().sum()
+    display(d_isn)
+    print("################## DataFrame Duplicated ###########")
+    print("\n")
+    d_dup=data.duplicated().sum()
+    display(d_dup)

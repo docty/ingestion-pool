@@ -6,12 +6,12 @@ from scipy.stats import skew, kurtosis
  
 
 def plot_chart(
+    data=None,
     x=None,
     y=None,
-    data=None,
     chart_type='hist',
-    xlabel='x',
-    ylabel='y',
+    xlabel=None,
+    ylabel=None,
     title=None,
     save_path=None,
     bins=20,
@@ -40,12 +40,10 @@ def plot_chart(
     if chart_type == 'line':
         if x is None or y is None:
             raise ValueError("Line chart requires both x and y data.")
-        xdata = data[x]
-        ydata = data[y]
-        
-        ax.plot(xdata, ydata, marker='o', linestyle='-', linewidth=2)
-        ax.set_xlabel(xlabel)
-        ax.set_ylabel(ylabel)
+         
+        sns.lineplot(data=data,x=x,y=y, ax=ax)
+        ax.set_xlabel(xlabel or x)
+        ax.set_ylabel(ylabel or x)
         ax.set_title(title)
         ax.grid(True, linestyle='--', alpha=0.6)
 
@@ -92,7 +90,29 @@ def plot_chart(
         ax.set_ylabel(ylabel or y)
         ax.set_title(title)
 
-    
+    elif chart_type == 'cat':
+        if data is None or x is None:
+            raise ValueError("Scatter plot requires 'data', 'x'.")
+        sns.catplot(data=data, x=x, kind='count',aspect=2.4, ax=ax)
+        ax.set_xlabel(xlabel or x)
+        ax.set_ylabel(ylabel or y)
+        ax.set_title(title)
+
+    elif chart_type == 'dist':
+        if data is None or x is None:
+            raise ValueError("Scatter plot requires 'data', 'x'.")
+        sns.displot(data=data, x=x, kde=True, bins=25)
+        ax.set_xlabel(xlabel or x)
+        ax.set_ylabel(ylabel or y)
+        ax.set_title(title)
+
+    elif chart_type == 'violin':
+        if data is None or x is None:
+            raise ValueError("Scatter plot requires 'data', 'x'.")
+        sns.violinplot(data=data, x=x, y=y)
+        ax.set_xlabel(xlabel or x)
+        ax.set_ylabel(ylabel or y)
+        ax.set_title(title)
 
      
     else:
@@ -105,3 +125,86 @@ def plot_chart(
      
     if ax is None:
         plt.show()
+
+
+def histogram_plot(df, numerical_columns):
+    '''
+    Takes df, numerical columns as list
+    Returns a group of histagrams
+    '''
+    f = pd.melt(df, value_vars=numerical_columns) 
+    g = sns.FacetGrid(f, col='variable',  col_wrap=4, sharex=False, sharey=False)
+    g = g.map(sns.distplot, 'value')
+    return g
+
+
+def heatmap_plot(df, dependent_variable):
+    '''
+    Takes df, a dependant variable as str
+    Returns a heatmap of all independent variables' correlations with dependent variable 
+    '''
+    plt.figure(figsize=(8, 10))
+    g = sns.heatmap(df.corr()[[dependent_variable]].sort_values(by=dependent_variable), 
+                    annot=True, 
+                    cmap='coolwarm', 
+                    vmin=-1,
+                    vmax=1) 
+    return g
+
+def corr_list(df):
+
+      return  (df.corr()
+          .unstack()
+          .sort_values(kind="quicksort",ascending=False)
+          .drop_duplicates().iloc[1:]); df_out
+
+    
+def box_plot(df, col_name, title=None, xlabel=None):
+    """
+    Draw's a single horizontal boxplot
+    Parameters
+    ----------
+    df : Pandas Data Frame
+    col_name : column name in data frame
+    title : Plot title
+    xlabel : X-axis label
+    ylabel : Y-axis label
+    """
+    fig = plt.figure(figsize=(10, 6))  # define plot area
+    ax = fig.add_subplot(111)  # add single subplot
+    sns.boxplot(df[col_name], ax=ax)  # Use seaborn plot
+    if not title:
+        title = 'Boxplot of {}'.format(col_name)
+    ax.set_title(title)  # Give the plot a main title
+    if not xlabel:
+        xlabel = col_name
+    ax.set_xlabel(xlabel)  # Set text for the x axis
+
+
+def bar_plot(df, col_name, title=None, xlabel=None, ylabel='Count'):
+    """
+    Draw's a single bar plot
+    Parameters
+    ----------
+    df : Pandas Data Frame
+    col_name : column name in data frame
+    title : Plot title
+    xlabel : X-axis label
+    ylabel : Y-axis label
+    """
+    fig = plt.figure(figsize=(10, 6))  # define plot area
+    ax = fig.add_subplot(111)  # add single subplot
+    ax = df[col_name].value_counts().plot.bar(
+        color='steelblue')  # Use pandas bar plot
+    if not title:
+        title = 'Barplot of {}'.format(col_name)
+    ax.set_title(title)  # Give the plot a main title
+    if not xlabel:
+        xlabel = f'No. of {col_name}'
+    ax.set_xlabel(xlabel)  # Set text for the x axis
+    ax.set_ylabel(ylabel)  # Set text for the y axis
+
+def pairplot(data):
+    sns.set_style('darkgrid')
+    sns.pairplot(data, kind='reg', diag_kind='kde',
+             plot_kws={'line_kws':{'color':'red'}}, diag_kws={'color':'green'})
