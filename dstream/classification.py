@@ -25,5 +25,5 @@ def pca_model(data, columns=['PCA1','PCA2']):
  
  
     display(reduced_X.head())
-    return reduced_X 
+    return reduced_X, pca 
  
