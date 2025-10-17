@@ -40,7 +40,10 @@ def plot_chart(
     if chart_type == 'line':
         if x is None or y is None:
             raise ValueError("Line chart requires both x and y data.")
-        ax.plot(x, y, marker='o', linestyle='-', linewidth=2)
+        xdata = data[x]
+        ydata = data[y]
+        
+        ax.plot(xdata, ydata, marker='o', linestyle='-', linewidth=2)
         ax.set_xlabel(xlabel)
         ax.set_ylabel(ylabel)
         ax.set_title(title)
@@ -50,18 +53,23 @@ def plot_chart(
     elif chart_type == 'pie':
         if x is None or y is None:
             raise ValueError("Pie chart requires both x and y data.")
-        ax.pie(y, labels=x, autopct='%1.1f%%', startangle=90)
+        xdata = data[x]
+        
+        
+        ax.pie(xdata, labels=x, autopct='%1.1f%%', startangle=90)
         ax.axis('equal')
         ax.set_title(title)
 
     
     elif chart_type == 'hist':
-        if y is None:
+        if x is None:
             raise ValueError("Histogram requires y data.")
-        skewness = skew(y)
-        kurto = kurtosis(y)
+        x_data = data[x]
+        
+        skewness = skew(x_data)
+        kurto = kurtosis(x_data)
 
-        sns.histplot(y, bins=bins, edgecolor='black', kde=True, alpha=0.75, ax=ax)
+        sns.histplot(x_data, bins=bins, edgecolor='black', kde=True, alpha=0.75, ax=ax)
         ax.set_xlabel(xlabel)
         ax.set_ylabel(ylabel)
         ax.set_title(f'{title}, Skew: {skewness:.5f}, Kurtosis: {kurto:.5f}')
@@ -71,7 +79,7 @@ def plot_chart(
     elif chart_type == 'box':
         if data is None or features is None:
             raise ValueError("Box plot requires 'data' and 'features'.")
-        sns.boxplot(data=data[features], ax=ax)
+        sns.boxplot(data=data[x], ax=ax)
         ax.set_title(title)
         ax.tick_params(axis='x', rotation=45)
 
@@ -83,6 +91,8 @@ def plot_chart(
         ax.set_xlabel(xlabel or x)
         ax.set_ylabel(ylabel or y)
         ax.set_title(title)
+
+    
 
      
     else:

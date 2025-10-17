@@ -1,5 +1,7 @@
 from IPython.display import display
 import pandas as pd 
+import numpy as np 
+
 
 def read_data(filename):
     return pd.read_csv(filename)
@@ -31,7 +33,20 @@ def get_columns(data):
 
 
  
-def std():
-    """ A high standard deviation means that the data is spread out, while a low standard
-    deviation means that the data is concentrated around the mean"""
-    pass
+def checks_null_values(df):
+    '''
+    Takes df
+    Checks nulls
+    '''
+    if df.isnull().sum().sum() > 0:
+        mask_total = df.isnull().sum().sort_values(ascending=False) 
+        total = mask_total[mask_total > 0]
+
+        mask_percent = df.isnull().mean().sort_values(ascending=False) 
+        percent = mask_percent[mask_percent > 0] * 100
+
+        missing_data = pd.concat([total, percent], axis=1, keys=['Total', 'Percent']).sort_values(by=['Total'], ascending=False)
+    
+        return missing_data
+    else: 
+        print('No NaN found.')
