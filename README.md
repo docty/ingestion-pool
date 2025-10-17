@@ -1,7 +1,7 @@
 # ingestion-pool
 
 ## Installation
-```python
+```bash
 pip install dstream
 ```
 

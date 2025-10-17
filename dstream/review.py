@@ -3,8 +3,8 @@ import pandas as pd
 import numpy as np 
 
 
-def read_data(filename):
-    return pd.read_csv(filename)
+def read_data(filename, index_col=None):
+    return pd.read_csv(filename, index_col=index_col)
     
 def analyze(data, sections=None):
     available_sections = {

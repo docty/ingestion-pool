@@ -67,9 +67,9 @@ def plot_chart(
         skewness = skew(x_data)
         kurto = kurtosis(x_data)
 
-        sns.histplot(x_data, bins=bins, edgecolor='black', kde=True, alpha=0.75, ax=ax)
+        sns.histplot(x_data, bins=bins, edgecolor='black', kde=True, alpha=0.75, ,binwidth=0.1, ax=ax)
         ax.set_xlabel(xlabel or x)
-        ax.set_ylabel(ylabel or y)
+        #ax.set_ylabel(ylabel or y)
         ax.set_title(f'{title}, Skew: {skewness:.5f}, Kurtosis: {kurto:.5f}')
         ax.grid(axis='y', linestyle='--', alpha=0.6)
 
@@ -210,17 +210,20 @@ def bar_plot(df, col_name, title=None, xlabel=None, ylabel='Count'):
     ax.set_xlabel(xlabel)  # Set text for the x axis
     ax.set_ylabel(ylabel)  # Set text for the y axis
 
-def pairplot(data):
+def pairplot(data, reg=False):
     sns.set_style('darkgrid')
-    sns.pairplot(data, kind='reg', diag_kind='kde',
-             plot_kws={'line_kws':{'color':'red'}}, diag_kws={'color':'green'})
+    if reg:
+        sns.pairplot(data, kind='reg', diag_kind='kde',
+                plot_kws={'line_kws':{'color':'red'}}, diag_kws={'color':'green'})
+    else:
+        sns.pairplot(data)
 
-def lmplot(data, x, y, hue="classification"):
-    sns.lmplot(data=data, x="pH",y="Conductivity (µS/cm)",hue=hue)
+def lmplot(data, x, y, hue=None):
+    sns.lmplot(data=data, x=x,y=y,hue=hue)
     plt.title(f"Relation between {x} and the {y}")
     plt.show()
 
-def jointplot(data, x, y, hue="classification"):
+def jointplot(data, x, y, hue=None):
     g = sns.jointplot(data=data,x=x,y=y,hue=hue,height=8)
     g.plot_joint(sns.kdeplot,color='y',zorder=0)
     g.plot_marginals(sns.rugplot,color='r',height=-0.2,clip_on=False)

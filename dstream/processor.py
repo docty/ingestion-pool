@@ -29,10 +29,10 @@ def normalize_data(data, method='std'):
 
 
 
-def tsne():
+def tsne(data):
     model = TSNE()
     
-    transformed_model = model.fit_transform(df)
+    transformed_model = model.fit_transform(data)
     
     xs = transformed_model[:,0]
     ys =transformed_model[:,1]
