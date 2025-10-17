@@ -68,8 +68,8 @@ def plot_chart(
         kurto = kurtosis(x_data)
 
         sns.histplot(x_data, bins=bins, edgecolor='black', kde=True, alpha=0.75, ax=ax)
-        ax.set_xlabel(xlabel)
-        ax.set_ylabel(ylabel)
+        ax.set_xlabel(xlabel or x)
+        ax.set_ylabel(ylabel or y)
         ax.set_title(f'{title}, Skew: {skewness:.5f}, Kurtosis: {kurto:.5f}')
         ax.grid(axis='y', linestyle='--', alpha=0.6)
 
@@ -216,7 +216,7 @@ def pairplot(data):
              plot_kws={'line_kws':{'color':'red'}}, diag_kws={'color':'green'})
 
 def lmplot(data, x, y, hue="classification"):
-    sns.lmplot(data=df,x="pH",y="Conductivity (µS/cm)",hue=hue)
+    sns.lmplot(data=data, x="pH",y="Conductivity (µS/cm)",hue=hue)
     plt.title(f"Relation between {x} and the {y}")
     plt.show()
 
@@ -226,6 +226,28 @@ def jointplot(data, x, y, hue="classification"):
     g.plot_marginals(sns.rugplot,color='r',height=-0.2,clip_on=False)
     plt.show()
 
+def barplot(data, x, y="R2-Value"):
+    plt.subplots(figsize=(15,10))  
+    sns.barplot(data=df_r, x=df_r.index, y=y)
+    plt.show()
+
+
 def regplot(data, x, y):
     sns.regplot(data=data, y=y, x=x)
     plt.show()
+
+def plot_prediction(y_test,y_pred):
+    plt.figure(figsize=(8,6))
+    plt.scatter(y_test,y_pred)
+    plt.plot([y_test.min(),y_test.max()],[y_test.min(),y_test.max()])
+
+
+def relplot(data, x, y, hue="Cluster"):
+    sns.relplot(
+        x=x, y=y, hue=hue, data=data, height=6
+    )
+
+def facetgrid(data, col='Cluster'):
+    for c in df_copy:
+        grid= sns.FacetGrid(data, col=col)
+        grid.map(plt.hist, c)
