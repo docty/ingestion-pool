@@ -67,7 +67,7 @@ def plot_chart(
         skewness = skew(x_data)
         kurto = kurtosis(x_data)
 
-        sns.histplot(x_data, bins=bins, edgecolor='black', kde=True, alpha=0.75, ,binwidth=0.1, ax=ax)
+        sns.histplot(x_data, bins=bins, edgecolor='black', kde=True, alpha=0.75 ,binwidth=0.1, ax=ax)
         ax.set_xlabel(xlabel or x)
         #ax.set_ylabel(ylabel or y)
         ax.set_title(f'{title}, Skew: {skewness:.5f}, Kurtosis: {kurto:.5f}')
@@ -144,17 +144,13 @@ def correlate(data):
     plt.show()
 
 
-def heatmap_plot(df, dependent_variable):
-    '''
-    Takes df, a dependant variable as str
-    Returns a heatmap of all independent variables' correlations with dependent variable 
-    '''
-    plt.figure(figsize=(8, 10))
-    g = sns.heatmap(df.corr()[[dependent_variable]].sort_values(by=dependent_variable), 
+def heatmap_plot(data):
+    
+    plt.figure(figsize=(10, 8))
+    g = sns.heatmap(data.corr(), 
                     annot=True, 
                     cmap='coolwarm', 
-                    vmin=-1,
-                    vmax=1) 
+                    ) 
     return g
 
 def corr_list(df):
@@ -254,3 +250,15 @@ def facetgrid(data, col='Cluster'):
     for c in df_copy:
         grid= sns.FacetGrid(data, col=col)
         grid.map(plt.hist, c)
+
+
+def count_plot(data, x, labels=None):
+    plt.subplots(figsize=(8,6))  
+    sns.countplot(data=data, x=x)
+    plt.xticks(ticks=[0, 1], labels = labels)
+    plt.show()
+
+
+def violin_plot(data, x, y):
+    sns.violinplot(x=x, y=y, data=data, palette='rocket')
+    plt.show()

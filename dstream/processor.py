@@ -15,6 +15,8 @@ def data_Xy(data, feature, target, split=False):
     return X, y
 
 
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
+
 def normalize_data(data, method='std'): 
     if method=='minmax':
         scaler = MinMaxScaler()
@@ -24,7 +26,7 @@ def normalize_data(data, method='std'):
     normalized = scaler.fit_transform(data)
     toDF = pd.DataFrame(normalized, columns=data.columns)
      
-    return toDF
+    return toDF, scaler
 
 
 
