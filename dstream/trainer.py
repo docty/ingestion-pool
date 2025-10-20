@@ -1,4 +1,5 @@
 from transformers import Trainer, TrainingArguments 
+from datasets import Dataset
 import torch.nn as nn
 
 class ScikitWrapper(nn.Module):
