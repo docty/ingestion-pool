@@ -238,7 +238,10 @@ def regplot(data, x, y):
 def plot_prediction(y_test,y_pred):
     plt.figure(figsize=(8,6))
     plt.scatter(y_test,y_pred)
-    plt.plot([y_test.min(),y_test.max()],[y_test.min(),y_test.max()])
+    plt.plot([y_test.min(),y_test.max()],[y_test.min(),y_test.max()], color="tab:orange", linewidth=3)
+     
+    plt.legend(["Data Points", "Prediction"])
+    
 
 
 def relplot(data, x, y, hue="Cluster"):
