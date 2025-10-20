@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "gampa"
-version = "0.2.1"
+version = "0.2.2"
 description = "Dstream"
 authors = [
     { name = "Henry Asiedu", email = "henry.asiedu@gmail.com" }
@@ -20,7 +20,11 @@ dependencies = [
     "numpy",
     "pandas",  
     "seaborn",
-    "scipy"
+    "scipy",
+    "skl2onnx",
+    "transformers",
+    "onnxruntime",
+    "datasets"
 ]
 
 [project.optional-dependencies]

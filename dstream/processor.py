@@ -16,7 +16,7 @@ def data_Xy(data, feature, target, split=False):
     return X, y
 
 
-from sklearn.preprocessing import MinMaxScaler, StandardScaler
+ 
 
 def normalize_data(data, method='std'): 
     if method=='minmax':
@@ -64,3 +64,9 @@ def to_huggingface_dataset(X_train, X_test, y_train, y_test):
   new_data = dataset_dict.map(convert_input_label, remove_columns=dataset_dict['train'].features)
 
   return new_data
+
+
+def fillna(data, column):
+    results = data[column].fillna(data[column].mean())
+    data[column] = results
+    return data

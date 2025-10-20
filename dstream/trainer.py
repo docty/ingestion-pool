@@ -1,6 +1,7 @@
 from transformers import Trainer, TrainingArguments 
 from datasets import Dataset
 import torch.nn as nn
+from dstream.export import export_model_to_onnx
 
 class ScikitWrapper(nn.Module):
 
@@ -22,8 +23,13 @@ class MLTrainer(Trainer):
     else:
       features, target = self.train_dataset
 
+    self.features = features
+
     self.model.model.fit(features, target)
 
 
   def predict(self, X_test):
     return self.model.model.predict(X_test)
+
+  def save(self):
+    export_model_to_onnx(self.model.model, self.features)
