@@ -1,23 +1,7 @@
 from IPython.display import display
 import pandas as pd 
 import numpy as np 
-
-from abc import ABC, abstractmethod
-
-
-class IDataReader(ABC):
-    @abstractmethod
-    def read(self, filename: str, index_col=None) -> pd.DataFrame:
-        pass
-
-
-class CSVDataReader(IDataReader):
-    def read(self, filename: str, index_col=None) -> pd.DataFrame:
-        return pd.read_csv(filename, index_col=index_col)
-
-#Deprecated        
-def read_data(filename, index_col=None):
-    return pd.read_csv(filename, index_col=index_col)
+ 
     
 def analyze(data, sections=None):
     available_sections = {
