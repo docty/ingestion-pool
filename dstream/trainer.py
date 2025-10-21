@@ -1,19 +1,19 @@
-from transformers import Trainer, TrainingArguments 
+#from transformers import Trainer, TrainingArguments 
 from datasets import Dataset
-import torch.nn as nn
+#import torch.nn as nn
 from dstream.export import export_model_to_onnx
 
-class ScikitWrapper(nn.Module):
+# class ScikitWrapper(nn.Module):
 
-  def __init__(self, model):
-    super(ScikitWrapper, self).__init__()
-    self.model = model
+#   def __init__(self, model):
+#     super(ScikitWrapper, self).__init__()
+#     self.model = model
 
-class MLTrainer(Trainer):
+class MLTrainer:
   
   @classmethod
-  def from_scikit(cls, model, train_dataset=None, args: TrainingArguments = TrainingArguments(report_to='none')):
-    wrapmodel = ScikitWrapper(model)
+  def from_scikit(cls, model, train_dataset=None):
+    wrapmodel = model #ScikitWrapper(model)
     return cls(model=wrapmodel,  train_dataset= train_dataset, args=args)
 
   def train(self):
@@ -33,3 +33,10 @@ class MLTrainer(Trainer):
 
   def save(self):
     export_model_to_onnx(self.model.model, self.features)
+
+
+
+# @classmethod
+#   def from_scikit(cls, model, train_dataset=None, args: TrainingArguments = TrainingArguments(report_to='none')):
+#     wrapmodel = ScikitWrapper(model)
+#     return cls(model=wrapmodel,  train_dataset= train_dataset, args=args)

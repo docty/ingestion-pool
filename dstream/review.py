@@ -23,12 +23,7 @@ def analyze(data, sections=None):
             print(f"\n{'=' * 40} {title} {'=' * 40}\n")
             display(available_sections[key]())
 
-
-def get_columns(data):
-    object_cols = data.select_dtypes(include=['object']).columns.tolist()
-    numeric_cols = data.select_dtypes(include=['number']).columns.tolist()
-    return {"object": object_cols, "numeric": numeric_cols}
-
+ 
 
  
 def checks_null_values(df):
