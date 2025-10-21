@@ -265,3 +265,87 @@ def count_plot(data, x, labels=None):
 def violin_plot(data, x, y):
     sns.violinplot(x=x, y=y, data=data, palette='rocket')
     plt.show()
+
+
+
+# Plotting
+def evaluation_plot(results_df):
+    plt.figure(figsize=(12, 8))
+    plt.suptitle('Model Performance Metrics', fontsize=20, fontweight='bold')
+    
+    # Accuracy Plot
+    plt.subplot(2, 2, 1)
+    sns.barplot(x='Model', y='Accuracy', data=results_df, color='orange')
+    plt.title('Accuracy', fontsize=16)
+    plt.xticks(rotation=45, ha='right')
+    
+    # Precision Plot
+    plt.subplot(2, 2, 2)
+    sns.barplot(x='Model', y='Precision', data=results_df, color='orange')
+    plt.title('Precision', fontsize=16)
+    plt.xticks(rotation=45, ha='right')
+    
+    # Recall Plot
+    plt.subplot(2, 2, 3)
+    sns.barplot(x='Model', y='Recall', data=results_df, color='orange')
+    plt.title('Recall', fontsize=16)
+    plt.xticks(rotation=45, ha='right')
+    
+    # F1 Score Plot
+    plt.subplot(2, 2, 4)
+    sns.barplot(x='Model', y='F1 Score', data=results_df, color='orange')
+    plt.title('F1 Score', fontsize=16)
+    plt.xticks(rotation=45, ha='right')
+    
+    plt.tight_layout(rect=[0, 0.03, 1, 0.95])
+    plt.show()
+
+
+
+    import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
+from sklearn.metrics import confusion_matrix
+
+def plot_confusion_matrices(y_test, predictions_dict):
+    """
+    Plots normalized confusion matrices for all models in predictions_dict.
+
+    Args:
+        y_test: True labels.
+        predictions_dict (dict): A dictionary where keys are model names and 
+                                 values are arrays of predicted labels.
+    """
+    num_models = len(predictions_dict)
+
+    # Grid: 2 columns, enough rows to fit all models
+    ncols = 2
+    nrows = int(np.ceil(num_models / ncols))
+
+    fig, axes = plt.subplots(nrows, ncols, figsize=(10, 5 * nrows))
+    axes = np.array(axes).flatten()  # Flatten for easy iteration
+
+    for ax, (model_name, y_pred) in zip(axes, predictions_dict.items()):
+        cm = confusion_matrix(y_test, y_pred)
+        cm_normalized = cm / np.sum(cm)
+
+        sns.heatmap(
+            cm_normalized,
+            annot=True,
+            fmt=".2%",
+            cmap="Reds",
+            ax=ax,
+            cbar=True,
+            square=True,
+            annot_kws={"size": 12}
+        )
+        ax.set_title(f"{model_name} Confusion Matrix", fontsize=14, pad=15)
+        ax.set_xlabel("Predicted Label", fontsize=12)
+        ax.set_ylabel("True Label", fontsize=12)
+
+    # Hide unused subplots (if any)
+    for extra_ax in axes[len(predictions_dict):]:
+        extra_ax.axis("off")
+
+    plt.tight_layout(pad=3.0)
+    plt.show()
