@@ -1,5 +1,5 @@
 from dstream.preprocess.base import IDataImputer, IDataEncoder, IDataScaler, IDataSplitter, IFeatureSelector
-#from dstream.preprocess.converter import HuggingFaceDatasetConverter
+from dstream.preprocess.huggingface import HuggingFaceDataset
 from dstream.preprocess.utils import setLogging
 import pandas as pd
 from typing import List, Optional
@@ -7,7 +7,7 @@ from typing import List, Optional
 
 logger = setLogging()
 
-class DataPreprocessor:
+class DataTransformer:
     def __init__(self,
                  imputer: Optional[IDataImputer]=None,
                  encoder: Optional[IDataEncoder]=None,
@@ -20,12 +20,12 @@ class DataPreprocessor:
         self.splitter = splitter
         self.selector = selector
 
-    def process(self, data: pd.DataFrame, features: List[str], target: str, to_hf=False):
+    def run(self, data: pd.DataFrame, features: List[str], target: str):
         try:
             logger.info("Starting preprocessing pipeline...")
             X = data[features]
             y = data[target]
-
+           
             X = self.imputer.impute(X)
             X = self.encoder.encode(X)
             X, _ = self.scaler.scale(X)
@@ -35,15 +35,17 @@ class DataPreprocessor:
 
             X_train, X_test, y_train, y_test = self.splitter.split(X, y)
 
-            if to_hf:
-                #converter = HuggingFaceDatasetConverter()
-                #result = converter.to_huggingface_dataset(X_train, X_test, y_train, y_test)
-                logger.info("Preprocessing complete with Hugging Face dataset output.")
-                #return result
-
             logger.info("Preprocessing complete with Pandas dataset output.")
             return X_train, X_test, y_train, y_test
 
         except Exception as e:
             logger.error(f"Pipeline error: {e}")
             raise
+
+    @staticmethod
+    def to_huggingface_dataset(X_train, X_test, y_train, y_test):
+        converter = HuggingFaceDataset()
+        result = converter.to_huggingface_dataset(X_train, X_test, y_train, y_test)
+        logger.info("Preprocessing complete with Hugging Face dataset output.")
+        return result
+

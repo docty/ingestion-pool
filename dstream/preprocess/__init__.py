@@ -1,11 +1,12 @@
-from .pipeline import DataPreprocessor
+from .pipeline import DataTransformer
 from .imputer import DataImputer
 from .encoder import DataEncoder
 from .scaler import DataScaler
 from .splitter import SimpleDataSplitter
 from .selector import FeatureSelector
+
 __all__ = [
-    'DataPreprocessor',
+    'DataTransformer',
     'DataImputer',
     'DataEncoder',
     'DataScaler',
