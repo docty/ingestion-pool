@@ -3,7 +3,7 @@ from dstream.preprocess.huggingface import HuggingFaceDataset
 from dstream.preprocess.utils import setLogging
 import pandas as pd
 from typing import List, Optional
-
+from dstream.preprocess import DataImputer, DataEncoder, DataScaler, SimpleDataSplitter, FeatureSelector
 
 logger = setLogging()
 
@@ -19,6 +19,14 @@ class DataTransformer:
         self.scaler = scaler
         self.splitter = splitter
         self.selector = selector
+
+    @classmethod
+    def from_default(cls):
+        #selector=FeatureSelector(k=2, task_type='classification')
+
+        return cls(imputer=DataImputer(), encoder=DataEncoder(categorical_cols=[]), 
+                   scaler=DataScaler(), splitter=SimpleDataSplitter())
+        
 
     def run(self, data: pd.DataFrame, features: List[str], target: str):
         try:

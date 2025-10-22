@@ -4,6 +4,8 @@ from .encoder import DataEncoder
 from .scaler import DataScaler
 from .splitter import SimpleDataSplitter
 from .selector import FeatureSelector
+from .outlier import OutlierRemover
+from .missing import MissingValueHandler
 
 __all__ = [
     'DataTransformer',
@@ -11,5 +13,7 @@ __all__ = [
     'DataEncoder',
     'DataScaler',
     'SimpleDataSplitter',
-    'FeatureSelector'
+    'FeatureSelector',
+    'MissingValueHandler',
+    'OutlierRemover'
 ]

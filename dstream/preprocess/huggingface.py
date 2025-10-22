@@ -1,5 +1,8 @@
 from datasets import DatasetDict, Dataset 
 import pandas as pd
+from dstream.preprocess.utils import setLogging
+ 
+logger = setLogging()
 
 class HuggingFaceDataset:
     @staticmethod
