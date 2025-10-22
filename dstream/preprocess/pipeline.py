@@ -3,7 +3,10 @@ from dstream.preprocess.huggingface import HuggingFaceDataset
 from dstream.preprocess.utils import setLogging
 import pandas as pd
 from typing import List, Optional
-from dstream.preprocess import DataImputer, DataEncoder, DataScaler, SimpleDataSplitter, FeatureSelector
+from dstream.preprocess.imputer import DataImputer
+from dstream.preprocess.encoder import DataEncoder
+from dstream.preprocess.scaler import DataScaler
+from dstream.preprocess.splitter import SimpleDataSplitter 
 
 logger = setLogging()
 
