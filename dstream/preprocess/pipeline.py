@@ -1,10 +1,10 @@
-#from dstream.preprocess.base import IDataImputer, IDataEncoder, IDataScaler, IDataSplitter, IFeatureSelector
+from dstream.preprocess.base import IDataImputer, IDataEncoder, IDataScaler, IDataSplitter, IFeatureSelector
 #from dstream.preprocess.converter import HuggingFaceDatasetConverter
-#from dstream.preprocess.utils import setLogging
-import pandas as pd 
+from dstream.preprocess.utils import setLogging
+import pandas as pd
 from typing import List, Optional
 
- 
+
 logger = setLogging()
 
 class DataPreprocessor:
@@ -36,10 +36,10 @@ class DataPreprocessor:
             X_train, X_test, y_train, y_test = self.splitter.split(X, y)
 
             if to_hf:
-                converter = HuggingFaceDatasetConverter()
-                result = converter.to_huggingface_dataset(X_train, X_test, y_train, y_test)
+                #converter = HuggingFaceDatasetConverter()
+                #result = converter.to_huggingface_dataset(X_train, X_test, y_train, y_test)
                 logger.info("Preprocessing complete with Hugging Face dataset output.")
-                return result
+                #return result
 
             logger.info("Preprocessing complete with Pandas dataset output.")
             return X_train, X_test, y_train, y_test
