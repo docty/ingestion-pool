@@ -24,7 +24,8 @@ dependencies = [
     "skl2onnx",
     "transformers",
     "onnxruntime",
-    "datasets"
+    "datasets",
+    "statsmodels"
 ]
 
 [project.optional-dependencies]
