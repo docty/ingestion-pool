@@ -3,8 +3,8 @@ import seaborn as sns
 from dstream.graph.statistical import StatisticalAnnotator
 from dstream.graph.base import BasePlot
 from scipy.stats import skew, kurtosis
-
-
+import pandas as pd
+ 
 class ChartFactory(BasePlot):
     
     def __init__(self):
@@ -31,6 +31,7 @@ class ChartFactory(BasePlot):
         sns.histplot(x_data, bins=bins, kde=True, edgecolor="black", ax=ax)
         ax.set_title(f"(Skew: {skewness:.2f}, Kurtosis: {kurt:.2f})")
         ax.set_xlabel(x)
+        ax.grid(axis='y', linestyle='--', alpha=0.6)
         self._save_or_show()
 
 
@@ -40,6 +41,7 @@ class ChartFactory(BasePlot):
         ax.set_title(title or f"{y} vs {x}")
         ax.set_xlabel(xlabel or x)
         ax.set_ylabel(ylabel or y)
+        ax.grid(True, linestyle='--', alpha=0.6)
         self._save_or_show()
 
 
@@ -48,6 +50,7 @@ class ChartFactory(BasePlot):
         ax = self._init_ax(ax)
         sns.boxplot(data=data[x], ax=ax)
         ax.set_title(title or f"Box Plot of {x}")
+        ax.tick_params(axis='x', rotation=45)
         self._save_or_show()
 
     
@@ -81,4 +84,71 @@ class ChartFactory(BasePlot):
         sns.violinplot(data=data, x=x, y=y, ax=ax)
         ax.set_title(title or f"Violin Plot of {x} vs {y}")
         self._save_or_show()
+
+
+    def _plot_cat(self, data, x,  ax=None, title=None):
+        ax = self._init_ax(ax)
+        sns.catplot(data=data, x=x, kind='count',aspect=2.4, ax=ax)
+        ax.set_title(title or f"Cat Plot of {x} vs {y}")
+        self._save_or_show()
+
+    def _plot_dist(self, data, x,  ax=None, title=None):
+        ax = self._init_ax(ax)
+        sns.displot(data=data, x=x, kde=True, bins=25)
+        ax.set_title(title or f"Dist Plot of {x} vs {y}")
+        self._save_or_show()  
+
+    def _plot_pair(self, data, x,  ax=None, title=None):
+        ax = self._init_ax(ax)
+        sns.pairplot(data, kind='reg', diag_kind='kde', plot_kws={'line_kws':{'color':'red'}}, diag_kws={'color':'green'})
+        ax.set_title(title or f"Pair Plot of {x} vs {y}")
+        self._save_or_show() 
+
+
+    def _plot_lmplot(self, data, x, y, hue,  ax=None, title=None):
+        ax = self._init_ax(ax)
+        sns.lmplot(data=data, x=x,y=y,hue=hue)
+        ax.set_title(title or f"Relation between {x} and the {y}")
+        self._save_or_show() 
+
+    def _plot_joint(self, data, x, y, hue,  ax=None, title=None):
+        ax = self._init_ax(ax)
+        g = sns.jointplot(data=data,x=x,y=y,hue=hue,height=8)
+        g.plot_joint(sns.kdeplot,color='y',zorder=0)
+        g.plot_marginals(sns.rugplot,color='r',height=-0.2,clip_on=False)
+        ax.set_title(title or f"Relation between {x} and the {y}")
+        self._save_or_show() 
+
+
+    def _plot_bar(self, data, x, y,   ax=None, title=None):
+        ax = self._init_ax(ax)
+        sns.barplot(data=data, x=x, y=y)
+        ax.set_title(title or f"Bar plot between {x} and the {y}")
+        self._save_or_show() 
+
+    def _plot_reg(self, data, x, y,   ax=None, title=None):
+        ax = self._init_ax(ax)
+        sns.regplot(data=data, y=y, x=x)
+        self._save_or_show() 
+
+    def _plot_rel(self, data, x, y, hue,  ax=None, title=None):
+        ax = self._init_ax(ax)
+        sns.relplot(x=x, y=y, hue=hue, data=data, height=6 )
+        self._save_or_show() 
+
+    def _plot_count(self, data, x,   ax=None, title=None):
+        ax = self._init_ax(ax)
+        sns.countplot(data=data, x=x)
+        self._save_or_show() 
+    
+    def _plot_facet(self, data, x):
+        '''
+        Takes df, numerical columns as list
+        Returns a group of histagrams
+        '''
+
+        f = pd.melt(data, value_vars=x) 
+        g = sns.FacetGrid(f, col='variable',  col_wrap=4, sharex=False, sharey=False)
+        g = g.map(sns.distplot, 'value')
+        return g 
 
