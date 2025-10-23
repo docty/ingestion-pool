@@ -1,5 +1,6 @@
 from .base import BasePlot
 import matplotlib.pyplot as plt
+import seaborn as sns 
 
 class EvaluationPlot(BasePlot):
     

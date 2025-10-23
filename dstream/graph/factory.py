@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
 import seaborn as sns
-from .statistical import StatisticalAnnotator
-from .base import BasePlot
-from scipy import skew, kurtosis
+from dstream.graph.statistical import StatisticalAnnotator
+from dstream.graph.base import BasePlot
+from scipy.stats import skew, kurtosis
 
 
 class ChartFactory(BasePlot):
@@ -22,6 +22,18 @@ class ChartFactory(BasePlot):
         method(data, x, y, **kwargs)
 
     
+    def _plot_hist(self, data, x, ax=None, bins=20, title=None, **kwargs):
+        ax = self._init_ax(ax)
+        x_data = data[x]
+       
+        skewness, kurt = skew(x_data), kurtosis(x_data)
+        
+        sns.histplot(x_data, bins=bins, kde=True, edgecolor="black", ax=ax)
+        ax.set_title(f"(Skew: {skewness:.2f}, Kurtosis: {kurt:.2f})")
+        ax.set_xlabel(x)
+        self._save_or_show()
+
+
     def _plot_line(self, data, x, y, ax=None, title=None, xlabel=None, ylabel=None):
         ax = self._init_ax(ax)
         sns.lineplot(data=data, x=x, y=y, ax=ax)
@@ -30,16 +42,6 @@ class ChartFactory(BasePlot):
         ax.set_ylabel(ylabel or y)
         self._save_or_show()
 
-    
-    def _plot_hist(self, data, x, ax=None, bins=20, title=None):
-        ax = self._init_ax(ax)
-        x_data = data[x]
-        skewness, kurt = skew(x_data), kurtosis(x_data)
-
-        sns.histplot(x_data, bins=bins, kde=True, edgecolor="black", ax=ax)
-        ax.set_title(f"{title or x} (Skew: {skewness:.2f}, Kurtosis: {kurt:.2f})")
-        ax.set_xlabel(x)
-        self._save_or_show()
 
     
     def _plot_box(self, data, x=None, ax=None, title=None):
