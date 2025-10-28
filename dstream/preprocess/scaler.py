@@ -2,10 +2,10 @@ from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from typing import Tuple, Any
 import pandas as pd
 from dstream.preprocess.base import IDataScaler
-from dstream.preprocess.utils import setLogging
+from dstream.utils.logged import setLogging
  
 
-logger = setLogging()
+logger = setLogging().getLogger("Scaler")
 
 class DataScaler(IDataScaler):
     def __init__(self, method: str = 'standard'):

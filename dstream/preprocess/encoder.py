@@ -3,9 +3,9 @@ from sklearn.preprocessing import OneHotEncoder, LabelEncoder
 import pandas as pd
 from typing import List, Optional, Tuple, Any
 from abc import ABC, abstractmethod
-from dstream.preprocess.utils import setLogging
+from dstream.utils.logged import setLogging
  
-logger = setLogging()
+logger = setLogging().getLogger('Encoding')
 
 class DataEncoder(IDataEncoder):
     """Encodes categorical variables using OneHotEncoder."""
@@ -14,20 +14,21 @@ class DataEncoder(IDataEncoder):
         self.categorical_cols = categorical_cols or []
         self.encoder = OneHotEncoder(handle_unknown='ignore', sparse_output=False)
 
-    def encode(self, data: pd.DataFrame) -> pd.DataFrame:
-        if not self.categorical_cols:
+    def encode(self, data: pd.DataFrame, categorical_features=None) -> pd.DataFrame:
+        categorical_cols = self.categorical_cols or categorical_features
+        if not categorical_cols:
             logger.info("No categorical columns to encode.")
             return data
 
-        logger.info(f"Encoding categorical columns: {self.categorical_cols}")
+        logger.info(f"Encoding categorical columns: {categorical_cols}")
         try:
-            encoded = self.encoder.fit_transform(data[self.categorical_cols])
+            encoded = self.encoder.fit_transform(data[categorical_cols])
             encoded_df = pd.DataFrame(
                 encoded,
-                columns=self.encoder.get_feature_names_out(self.categorical_cols),
+                columns=self.encoder.get_feature_names_out(categorical_cols),
                 index=data.index,
             )
-            result = pd.concat([data.drop(columns=self.categorical_cols), encoded_df], axis=1)
+            result = pd.concat([data.drop(columns=categorical_cols), encoded_df], axis=1)
             logger.info("Encoding complete.")
             return result
         except Exception as e:

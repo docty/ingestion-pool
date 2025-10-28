@@ -1,5 +1,5 @@
 import pandas as pd 
-from dstream.preprocess.utils import setLogging
+from dstream.utils.logged import setLogging
 import numpy as np
  
 logger = setLogging()

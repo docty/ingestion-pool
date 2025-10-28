@@ -1,8 +1,8 @@
 from dstream.preprocess.base import  IDataSplitter
 from sklearn.model_selection import train_test_split
-from dstream.preprocess.utils import setLogging
+from dstream.utils.logged import setLogging
  
-logger = setLogging()
+logger = setLogging().getLogger("Splitter")
 
 class SimpleDataSplitter(IDataSplitter):
     def __init__(self, test_size: float = 0.2, random_state: int = 42):

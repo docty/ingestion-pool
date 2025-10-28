@@ -1,8 +1,9 @@
-from datasets import DatasetDict, Dataset 
+#from datasets import DatasetDict, Dataset 
 import pandas as pd
-from dstream.preprocess.utils import setLogging
+from dstream.utils.logged import setLogging
  
 logger = setLogging()
+ 
 
 class HuggingFaceDataset:
     @staticmethod
@@ -10,7 +11,7 @@ class HuggingFaceDataset:
         feature_columns = [k for k in example.keys() if k != "target"]
         return {"input": [example[f] for f in feature_columns], "label": example["target"]}
 
-    def to_huggingface_dataset(self, X_train, X_test, y_train, y_test) -> DatasetDict:
+    def to_huggingface_dataset(self, X_train, X_test, y_train, y_test):
         logger.info("Converting data to Hugging Face Dataset format...")
         try:
             train_df = pd.concat([X_train, y_train.rename("target")], axis=1)

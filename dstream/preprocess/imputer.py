@@ -1,9 +1,9 @@
 from dstream.preprocess.base import IDataImputer
-from dstream.preprocess.utils import setLogging
+from dstream.utils.logged import setLogging
 from sklearn.impute import SimpleImputer
 import pandas as pd 
 
-logger = setLogging()
+logger = setLogging().getLogger('Imputation')
 
 class DataImputer(IDataImputer):
 
@@ -12,7 +12,7 @@ class DataImputer(IDataImputer):
         self.imputer = SimpleImputer(strategy=self.strategy)
 
     def impute(self, data: pd.DataFrame) -> pd.DataFrame:
-        logger.info(f"Imputing missing values using '{self.strategy}' strategy...")
+        logger.info(f"Missing values using '{self.strategy}' strategy...")
         try:
             filled = self.imputer.fit_transform(data)
             filled_df = pd.DataFrame(filled, columns=data.columns)

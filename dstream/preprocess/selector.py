@@ -1,7 +1,7 @@
 from sklearn.feature_selection import SelectKBest, f_regression, f_classif, VarianceThreshold
 from dstream.preprocess.base import  IFeatureSelector
 import pandas as pd
-from dstream.preprocess.utils import setLogging
+from dstream.utils.logged import setLogging
  
 logger = setLogging()
 

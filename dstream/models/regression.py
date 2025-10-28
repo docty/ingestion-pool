@@ -9,7 +9,7 @@ class RegressionModel(BaseModelRegistry):
      
     def __init__(self, models=None):
          
-        self._models = models or {}
+        self.models = models or {}
 
     @classmethod
     def from_default(cls):
@@ -31,9 +31,9 @@ class RegressionModel(BaseModelRegistry):
         return cls(models=default_models)
 
     def add_model(self, name, model):
-        self._models[name] = model
+        self.models[name] = model
 
    
     @property
     def summary(self):
-        return {name: type(model).__name__ for name, model in self._models.items()}
+        return {name: type(model).__name__ for name, model in self.models.items()}
