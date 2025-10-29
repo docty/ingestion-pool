@@ -22,3 +22,6 @@ class DataReader(DataReaderBase):
         numeric_cols = self.data.select_dtypes(include=['number']).columns.tolist()
         
         return {"object": object_cols, "numeric": numeric_cols}
+    
+    def set_data(self, data):
+        self.data = data

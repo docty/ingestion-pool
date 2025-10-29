@@ -11,8 +11,3 @@ def tsne(data):
     ys =transformed_model[:,1]
     return xs, ys
 
-
-def fillna(data, column):
-    results = data[column].fillna(data[column].mean())
-    data[column] = results
-    return data
