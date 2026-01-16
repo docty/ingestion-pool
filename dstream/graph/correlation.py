@@ -9,4 +9,3 @@ class CorrelationPlot(BasePlot):
         sns.heatmap(data.corr(), annot=annot, cmap="coolwarm", ax=ax)
         ax.set_title("Correlation Matrix")
         self._save_or_show()
-

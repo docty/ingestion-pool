@@ -1,26 +1,27 @@
 from dstream.preprocess.base import IDataImputer, IDataEncoder, IDataScaler, IDataSplitter, IFeatureSelector
 from dstream.preprocess.huggingface import HuggingFaceDataset
-from dstream.preprocess.utils import setLogging
+from dstream.utils.logged import setLogging
 import pandas as pd
-from typing import List, Optional
+from typing import List, Optional, Tuple
 from dstream.preprocess.imputer import DataImputer
 from dstream.preprocess.encoder import DataEncoder
 from dstream.preprocess.scaler import DataScaler
 from dstream.preprocess.splitter import SimpleDataSplitter 
 
-logger = setLogging()
+logger = setLogging().getLogger('Transformation')
 
 class DataTransformer:
     def __init__(self,
-                 imputer: Optional[IDataImputer]=None,
-                 encoder: Optional[IDataEncoder]=None,
-                 scaler: Optional[IDataScaler]=None,
-                 splitter: Optional[IDataSplitter]=None,
-                 selector: Optional[IFeatureSelector] = None):
+                imputer: Optional[IDataImputer] = None,
+                encoder: Optional[IDataEncoder] = None,
+                scaler: Optional[IDataScaler] = None,
+                splitter: Optional[IDataSplitter] = None,
+                selector: Optional[IFeatureSelector] = None
+                ):
         self.imputer = imputer
         self.encoder = encoder
         self.scaler = scaler
-        self.splitter = splitter
+        self.splitter = splitter or SimpleDataSplitter()
         self.selector = selector
 
     @classmethod
@@ -31,27 +32,41 @@ class DataTransformer:
                    scaler=DataScaler(), splitter=SimpleDataSplitter())
         
 
-    def run(self, data: pd.DataFrame, features: List[str], target: str):
+    def run(self, data: pd.DataFrame, features: Tuple[List[str]], target: str):
         try:
-            logger.info("Starting preprocessing pipeline...")
-            X = data[features]
+            numerical_features, categorical_features = features
+
+            X1 = data[numerical_features]
+            X2 = data[categorical_features]
             y = data[target]
-           
-            X = self.imputer.impute(X)
-            X = self.encoder.encode(X)
-            X, _ = self.scaler.scale(X)
 
+            if self.imputer:
+                logger.info("Performing Imputation")
+                X1 = self.imputer.impute(X1)
+            if self.encoder:
+                logger.info("Performing Encoding")
+                X2 = self.encoder.encode(X2, categorical_features)
+            if self.scaler: 
+                logger.info("Performing Standardization")
+                X1, _ = self.scaler.scale(X1)
             if self.selector:
-                X = self.selector.select(X, y)
+                logger.info("Performing Feature Selection")
+                X1 = self.selector.select(X1, y)
 
-            X_train, X_test, y_train, y_test = self.splitter.split(X, y)
-
-            logger.info("Preprocessing complete with Pandas dataset output.")
-            return X_train, X_test, y_train, y_test
+            logger.info("Preprocessing complete.")
+            return pd.concat([X1, X2], axis=1), y
 
         except Exception as e:
             logger.error(f"Pipeline error: {e}")
             raise
+
+     
+    def split_data(self, X, y):
+
+        X_train, X_eval, y_train, y_eval = self.splitter.split(X, y)
+
+        return X_train, X_eval, y_train, y_eval
+
 
     @staticmethod
     def to_huggingface_dataset(X_train, X_test, y_train, y_test):

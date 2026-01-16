@@ -24,7 +24,7 @@ class BasicDataAnalyzer:
         for key in sections:
             if key in available_sections:
                 title = key.replace("_", " ").title()
-                print(f"\n{'=' * 40} {title} {'=' * 40}\n")
+                print(f"\n{'=' * 45} {title} {'=' * 45}\n")
                 result = available_sections[key]()
                 if result is not None:
                     display(result)
@@ -54,6 +54,7 @@ class BasicDataAnalyzer:
 
     @staticmethod
     def duplicate(data: pd.DataFrame):
-        print("################## DataFrame Duplicated ###########\n")
+        print(f"\n{'=' * 45}  Duplicated {'=' * 45}\n")
+         
         duplicate_count = data.duplicated().sum()
         display(duplicate_count)

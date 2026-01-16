@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import seaborn as sns
-from dstream.preprocess.utils import setLogging
+from dstream.utils.logged import setLogging
  
 logger = setLogging()
 
