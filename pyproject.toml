@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "dstream"
-version = "0.2.6"
+version = "0.2.7"
 description = "Dstream is an ingestion pool base."
 authors = [
     { name = "Henry Asiedu", email = "henry.asiedu@gmail.com" }

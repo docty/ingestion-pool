@@ -11,4 +11,3 @@ def tsne(data):
     ys =transformed_model[:,1]
     return xs, ys
 
-
